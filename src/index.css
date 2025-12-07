@@ -1,0 +1,28 @@
+/* Global reset and base styles */
+:root {
+  background: #ffffff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  line-height: 1.6;
+  color: #0f172a;
+}
+
+/* Box-sizing for all elements */
+* {
+  box-sizing: border-box;
+}
+
+/* Better link defaults */
+a {
+  color: inherit;
+}
+
+/* Remove default button styling */
+button {
+  font-family: inherit;
+}

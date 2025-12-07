@@ -1,0 +1,60 @@
+/* Comments list styling */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comments-empty {
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 6px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.comment {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 12px;
+    background: #f9fafb;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+
+.comment-author {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.comment-date {
+    color: #9ca3af;
+}
+
+.comment-content {
+    margin: 0 0 12px 0;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.btn-delete-comment {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-delete-comment:hover {
+    background: #dc2626;
+    color: white;
+}

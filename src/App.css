@@ -1,0 +1,31 @@
+/* Main app layout - flexbox to push footer down */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #0f172a;
+}
+
+/* Main content area - takes up available space */
+.app-main {
+  flex: 1;
+  padding: 24px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Basic heading styles */
+h1 {
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+/* Section wrapper for pages */
+section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

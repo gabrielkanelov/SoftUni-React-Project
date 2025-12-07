@@ -1,0 +1,51 @@
+/* Comment form styling */
+.comment-form {
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comment-input {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.comment-input:disabled {
+    background: #e5e7eb;
+    cursor: not-allowed;
+}
+
+.btn-comment {
+    align-self: flex-start;
+    padding: 8px 16px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-comment:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+.btn-comment:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

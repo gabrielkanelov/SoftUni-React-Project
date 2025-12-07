@@ -1,0 +1,106 @@
+/* Details page styling */
+.post-details {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.post-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+.post-meta .author {
+    font-weight: 500;
+}
+
+.post-content {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    color: #1f2937;
+    white-space: pre-wrap;
+}
+
+.post-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-like,
+.btn-edit,
+.btn-delete {
+    padding: 8px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.btn-like {
+    background: white;
+    color: #666;
+}
+
+.btn-like:hover:not(:disabled) {
+    border-color: #e11d48;
+    color: #e11d48;
+}
+
+.btn-like.liked {
+    background: #ffe4e6;
+    color: #e11d48;
+    border-color: #e11d48;
+}
+
+.btn-like:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-edit {
+    background: #dbeafe;
+    color: #0284c7;
+    border-color: #0284c7;
+}
+
+.btn-edit:hover {
+    background: #0284c7;
+    color: white;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #dc2626;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.comments-section {
+    margin-top: 24px;
+}
+
+.comments-section h2 {
+    margin-bottom: 16px;
+}
+
+.login-prompt {
+    background: #fef3c7;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.login-prompt a {
+    color: #0284c7;
+    text-decoration: underline;
+}
