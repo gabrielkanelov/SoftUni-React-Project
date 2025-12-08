@@ -9,16 +9,12 @@ import './Register.css'
 function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const { register } = useAuth()
   const navigate = useNavigate()
 
   // On submit, register the user and go to catalog
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (password !== confirmPassword) {
-      return
-    }
     register(email, password)
     navigate('/catalog')
   }
@@ -45,22 +41,7 @@ function Register() {
             required
           />
         </label>
-        <label>
-          Repeat Password
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={confirmPassword && confirmPassword !== password ? 'input-error' : ''}
-            required
-          />
-          {confirmPassword && confirmPassword !== password && (
-            <span className="error-text">Паролите не съвпадат</span>
-          )}
-        </label>
-        <button type="submit" disabled={confirmPassword !== password}>
-          Create Account
-        </button>
+        <button type="submit">Create Account</button>
         <div className="form-footer">
           Имаш акаунт? <Link to={ROUTES.LOGIN}>Влез</Link>
         </div>

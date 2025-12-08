@@ -29,6 +29,22 @@ export function addComment(postId, author, content) {
   })
 }
 
+// Update comment - only author can do this
+export function updateComment(commentId, content) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const comment = comments.find((c) => c.id === Number(commentId))
+      if (!comment) {
+        reject(new Error('Comment not found'))
+        return
+      }
+      comment.content = content
+      comment.updatedAt = new Date()
+      resolve({ ...comment })
+    }, API_DELAYS.COMMENT_OPERATIONS)
+  })
+}
+
 // Delete comment - only author or post author can do this
 export function deleteComment(commentId) {
   return new Promise((resolve, reject) => {
@@ -40,6 +56,16 @@ export function deleteComment(commentId) {
       }
       comments.splice(index, 1)
       resolve({ success: true })
+    }, API_DELAYS.COMMENT_OPERATIONS)
+  })
+}
+
+// Get comments by author
+export function getCommentsByAuthor(authorEmail) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const authorComments = comments.filter((c) => c.author === authorEmail)
+      resolve([...authorComments])
     }, API_DELAYS.COMMENT_OPERATIONS)
   })
 }

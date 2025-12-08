@@ -1,61 +1,66 @@
 /* Details page styling */
 .post-details {
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #e5e7eb;
 }
 
 .post-meta {
     display: flex;
-    gap: 16px;
+    gap: 1.5rem;
     font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 16px;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .post-meta .author {
-    font-weight: 500;
+    font-weight: 600;
+    color: #667eea;
 }
 
 .post-content {
     font-size: 1.05rem;
     line-height: 1.8;
-    margin-bottom: 24px;
-    color: #1f2937;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
     white-space: pre-wrap;
 }
 
 .post-actions {
     display: flex;
-    gap: 12px;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
 .btn-like,
 .btn-edit,
 .btn-delete {
-    padding: 8px 16px;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 0.95rem;
-    transition: all 0.2s;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .btn-like {
     background: white;
-    color: #666;
+    color: #667eea;
+    border-color: #667eea;
 }
 
 .btn-like:hover:not(:disabled) {
-    border-color: #e11d48;
-    color: #e11d48;
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
 }
 
 .btn-like.liked {
-    background: #ffe4e6;
-    color: #e11d48;
-    border-color: #e11d48;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .btn-like:disabled {
@@ -64,18 +69,19 @@
 }
 
 .btn-edit {
-    background: #dbeafe;
-    color: #0284c7;
-    border-color: #0284c7;
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    border-color: #667eea;
 }
 
 .btn-edit:hover {
-    background: #0284c7;
+    background: #667eea;
     color: white;
+    transform: translateY(-2px);
 }
 
 .btn-delete {
-    background: #fee2e2;
+    background: rgba(220, 38, 38, 0.1);
     color: #dc2626;
     border-color: #dc2626;
 }
@@ -83,24 +89,36 @@
 .btn-delete:hover {
     background: #dc2626;
     color: white;
+    transform: translateY(-2px);
 }
 
 .comments-section {
-    margin-top: 24px;
+    margin-top: 2rem;
 }
 
 .comments-section h2 {
-    margin-bottom: 16px;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-size: 1.3rem;
 }
 
 .login-prompt {
-    background: #fef3c7;
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 16px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    padding: 1.2rem;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
 }
 
 .login-prompt a {
-    color: #0284c7;
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.login-prompt a:hover {
+    color: #764ba2;
     text-decoration: underline;
 }

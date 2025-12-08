@@ -79,23 +79,6 @@
     transform: translateY(0);
 }
 
-.form button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
-
-.input-error {
-    border-color: #e11d48 !important;
-    box-shadow: 0 0 0 3px rgba(225, 17, 72, 0.15) !important;
-}
-
-.error-text {
-    color: #e11d48;
-    font-size: 0.9rem;
-}
-
 .form-footer {
     text-align: center;
     margin-top: 0.5rem;

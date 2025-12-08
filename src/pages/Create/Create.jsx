@@ -1,19 +1,20 @@
-// Create page - for adding new threads/posts
+// Create page - for adding new gaming topics
 // Protected route - only authenticated users can create
-// Will have a form here later
+// Users select category: PC Games, Console Games, Mobile Games, Gaming News
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createPost } from '../../services/postService'
 import { useAuth } from '../../contexts/AuthContext'
-import { VALIDATION_RULES, ROUTES } from '../../config/constants'
+import { VALIDATION_RULES, ROUTES, GAMING_CATEGORIES } from '../../config/constants'
 import './Create.css'
 
-// Create post page - form for adding new thread
+// Create topic page - form for adding new gaming discussion
 // Only accessible to authenticated users (PrivateRoute)
-// Validates that title and content are provided
+// Validates that title, content, and category are provided
 function Create() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [category, setCategory] = useState('')
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -35,6 +36,10 @@ function Create() {
       newErrors.content = VALIDATION_RULES.POST_CONTENT.message
     }
 
+    if (!category) {
+      newErrors.category = 'Please select a category'
+    }
+
     return newErrors
   }
 
@@ -53,13 +58,13 @@ function Create() {
       setLoading(true)
       setErrors({})
 
-      // Create post with current user as author
-      await createPost(title, content, user.email)
+      // Create topic with current user as author and selected category
+      await createPost(title, content, category, user.email)
 
-      // Redirect to catalog on success
-      navigate(ROUTES.CATALOG)
+      // Redirect to forum on success
+      navigate(ROUTES.FORUM)
     } catch (err) {
-      setErrors({ submit: 'Failed to create post. Please try again.' })
+      setErrors({ submit: 'Failed to create topic. Please try again.' })
       console.error(err)
     } finally {
       setLoading(false)
@@ -67,32 +72,51 @@ function Create() {
   }
 
   return (
-    <section>
-      <h1>Create New Post</h1>
+    <section className="create-container">
+      <h1>🎮 Create New Gaming Topic</h1>
 
       <form onSubmit={handleSubmit} className="form">
         {errors.submit && <div className="error-message">{errors.submit}</div>}
 
         <div className="form-group">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="category">Category *</label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            disabled={loading}
+            className="form-select"
+          >
+            <option value="">Select a category...</option>
+            {GAMING_CATEGORIES.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.emoji} {cat.label}
+              </option>
+            ))}
+          </select>
+          {errors.category && <span className="error">{errors.category}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="title">Title *</label>
           <input
             id="title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter post title..."
+            placeholder="What's the topic about?"
             disabled={loading}
           />
           {errors.title && <span className="error">{errors.title}</span>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="content">Content</label>
+          <label htmlFor="content">Content *</label>
           <textarea
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Write your post content here..."
+            placeholder="Share your thoughts and discussion..."
             rows="8"
             disabled={loading}
           />
@@ -105,11 +129,11 @@ function Create() {
             disabled={loading}
             className="btn-primary"
           >
-            {loading ? 'Creating...' : 'Create Post'}
+            {loading ? 'Creating...' : 'Create Topic'}
           </button>
           <button
             type="button"
-            onClick={() => navigate('/catalog')}
+            onClick={() => navigate(ROUTES.FORUM)}
             disabled={loading}
             className="btn-secondary"
           >

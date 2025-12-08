@@ -1,76 +1,163 @@
-/* Edit post form styling - same as Create */
+/* Edit topic form styling */
+.edit-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2.5rem 1.5rem;
+    min-height: 70vh;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+.edit-container h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    max-width: 600px;
+    gap: 1.5rem;
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.18);
+    border: 2px solid #e0e7ff;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 0.75rem;
 }
 
 .form-group label {
-    font-weight: 500;
+    font-weight: 600;
     color: #1f2937;
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
 }
 
 .form-group input,
-.form-group textarea {
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
+.form-group textarea,
+.form-select {
+    padding: 0.9rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
     font-size: 1rem;
     font-family: inherit;
+    transition: all 0.3s ease;
+    background: white;
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-select:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .form-group input:disabled,
-.form-group textarea:disabled {
-    background: #f3f4f6;
+.form-group textarea:disabled,
+.form-select:disabled {
+    background: #f9fafb;
     cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 2px solid #fecaca;
+    font-weight: 500;
 }
 
 .error {
     color: #dc2626;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .form-actions {
     display: flex;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    flex: 1;
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
 .btn-secondary {
-    padding: 10px 16px;
     background: #e5e7eb;
     color: #1f2937;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.2s;
+    flex: 1;
 }
 
 .btn-secondary:hover:not(:disabled) {
     background: #d1d5db;
+    transform: translateY(-2px);
 }
 
+.btn-primary:disabled,
 .btn-secondary:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-.btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+@media (max-width: 640px) {
+    .edit-container {
+        padding: 1rem;
+    }
+
+    .form {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
 }
