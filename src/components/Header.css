@@ -38,80 +38,76 @@
     font-weight: 500;
     letter-spacing: 0.2px;
     transition: all 0.3s ease;
-    position: relative;
-}
-
-.nav a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    transition: width 0.3s ease;
+    padding: 0.65rem 1.2rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .nav a:hover {
     color: #667eea;
-}
-
-.nav a:hover::after {
-    width: 100%;
-}
-
-.profile-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.7rem 1.2rem;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border: 1.5px solid #e5e7eb;
-    border-radius: 10px;
-    font-weight: 600;
-    color: #667eea;
-    transition: all 0.3s ease;
-}
-
-.profile-link:hover {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
     border-color: #667eea;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.profile-link {
+    gap: 0.6rem !important;
+    font-weight: 600 !important;
+    color: #667eea !important;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%) !important;
+}
+
+.profile-link:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+    color: #667eea !important;
 }
 
 /* Brand/logo styling */
 .brand {
     font-weight: 800;
     font-size: 1.3rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     letter-spacing: -0.5px;
+    padding: 0.65rem 1.2rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    color: #667eea;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
 }
 
 .brand:hover {
-    color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
 /* Make logout button look like a link */
 .linkish {
-    border: none;
-    background: none;
-    padding: 0.5rem 1rem;
+    padding: 0.65rem 1.2rem;
     color: var(--text-primary);
     cursor: pointer;
     text-decoration: none;
     font-weight: 500;
     letter-spacing: 0.2px;
     transition: all 0.3s ease;
-    border-radius: 6px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+    border: 1.5px solid #e5e7eb;
 }
 
 .linkish:hover {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
+    color: #dc2626;
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(220, 38, 38, 0.15) 100%);
+    border-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
 }
 
 @media (max-width: 768px) {

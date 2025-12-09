@@ -33,12 +33,12 @@ function Footer() {
         </div>
 
         <div className="footer-section">
-          <h4>Categories</h4>
+          <h4>Follow Us</h4>
           <div className="footer-links">
-            <span className="footer-category">🖥️ PC Games</span>
-            <span className="footer-category">🎮 Console</span>
-            <span className="footer-category">📱 Mobile</span>
-            <span className="footer-category">📰 News</span>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord</a>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer">X</a>
           </div>
         </div>
       </div>
