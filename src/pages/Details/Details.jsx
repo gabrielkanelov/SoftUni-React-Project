@@ -157,10 +157,11 @@ function Details() {
           </p>
         )}
 
-        <CommentList
-          comments={comments}
-          onCommentDeleted={handleCommentDeleted}
-        />
+          <CommentList
+            comments={comments}
+            postId={post.id}
+            onCommentDeleted={handleCommentDeleted}
+          />
       </div>
     </section>
   )

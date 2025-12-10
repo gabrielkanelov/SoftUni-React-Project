@@ -194,11 +194,11 @@ function PostDetails() {
         )}
 
         {/* Comments List */}
-        <CommentList
-          comments={comments}
-          onCommentDeleted={handleCommentDeleted}
-          onCommentUpdated={handleCommentUpdated}
-        />
+          <CommentList
+            comments={comments}
+            postId={post?.id}
+            onCommentDeleted={handleCommentDeleted}
+          />
       </section>
     </div>
   )
