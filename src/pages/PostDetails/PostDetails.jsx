@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { CommentList } from '../../components/CommentList'
 import { CommentForm } from '../../components/CommentForm'
 import { ROUTES, GAMING_CATEGORIES } from '../../config/constants'
+import { trackActivity, ACTIVITY_TYPES } from '../../utils/activityTracker'
 import './PostDetails.css'
 
 // Topic Details page - shows full gaming topic with comments
@@ -35,6 +36,12 @@ function PostDetails() {
 
         const postData = await getPostById(postId)
         setPost(postData)
+        
+        // Track view activity
+        trackActivity(ACTIVITY_TYPES.POST_VIEWED, {
+          postTitle: postData.title,
+          postId: postData._id || postData.id
+        })
 
         const commentsData = await getCommentsByPostId(postId)
         setComments(commentsData)
@@ -59,6 +66,12 @@ function PostDetails() {
     try {
       const updatedPost = await likePost(post.id, user.token)
       setPost(updatedPost)
+      
+      // Track like activity
+      trackActivity(ACTIVITY_TYPES.POST_LIKED, {
+        postTitle: post.title,
+        postId: post._id || post.id
+      })
     } catch (err) {
       setError('Failed to update like')
       console.error(err)
@@ -72,6 +85,13 @@ function PostDetails() {
     try {
       setDeleting(true)
       await deletePost(post.id)
+      
+      // Track delete activity
+      trackActivity(ACTIVITY_TYPES.POST_DELETED, {
+        postTitle: post.title,
+        postId: post._id || post.id
+      })
+      
       navigate(ROUTES.FORUM)
     } catch (err) {
       setError('Failed to delete topic')

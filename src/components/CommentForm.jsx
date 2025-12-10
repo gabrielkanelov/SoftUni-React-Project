@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { addComment } from '../services/commentService'
 import { VALIDATION_RULES, STORAGE_KEYS, UI_CONSTANTS } from '../config/constants'
+import { trackActivity, ACTIVITY_TYPES } from '../utils/activityTracker'
 import './CommentForm.css'
 
 // CommentForm component - form for adding new comment to a post
@@ -41,6 +42,11 @@ function CommentForm({ postId, onCommentAdded }) {
 
       // Add comment
       const newComment = await addComment(postId, user.email, content)
+      
+      // Track activity
+      trackActivity(ACTIVITY_TYPES.COMMENT_ADDED, {
+        postId: postId
+      })
 
       // Call callback to add comment to UI
       onCommentAdded(newComment)

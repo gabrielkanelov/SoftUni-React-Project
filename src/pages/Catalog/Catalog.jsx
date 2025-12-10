@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { getAllPosts, getPostsByCategory } from '../../services/postService'
 import { PostCard } from '../../components/PostCard'
 import { useAuth } from '../../contexts/AuthContext'
@@ -17,6 +17,8 @@ function Catalog() {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const { isAuthenticated } = useAuth()
   const cardRefs = useRef([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const searchQuery = searchParams.get('search') || ''
 
   // Fetch all topics when component mounts
   useEffect(() => {
@@ -38,8 +40,28 @@ function Catalog() {
     loadPosts()
   }, [])
 
+  // Apply search filter when search query changes
+  useEffect(() => {
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      const filtered = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.content.toLowerCase().includes(query) ||
+          post.author.toLowerCase().includes(query)
+      )
+      setFilteredPosts(filtered)
+      setSelectedCategory(null)
+    } else if (selectedCategory) {
+      handleCategoryFilter(selectedCategory)
+    } else {
+      setFilteredPosts(posts)
+    }
+  }, [searchQuery, posts])
+
   // Filter posts by selected category
   const handleCategoryFilter = async (categoryId) => {
+    setSearchParams({})
     setSelectedCategory(categoryId)
     if (categoryId === null) {
       setFilteredPosts(posts)
@@ -94,6 +116,18 @@ function Catalog() {
         )}
       </div>
 
+      {searchQuery && (
+        <div className="search-indicator">
+          <span>Searching for: <strong>{searchQuery}</strong></span>
+          <button
+            onClick={() => setSearchParams({})}
+            className="clear-search-btn"
+          >
+            ✕ Clear
+          </button>
+        </div>
+      )}
+
       {/* Category Filter Buttons */}
       <div className="category-filter">
         <button
@@ -116,7 +150,11 @@ function Catalog() {
       {error && <div className="error-message">{error}</div>}
 
       {filteredPosts.length === 0 ? (
-        <p className="no-topics">No topics in this category. Be the first to create one!</p>
+        <p className="no-topics">
+          {searchQuery
+            ? `No topics found for "${searchQuery}". Try a different search.`
+            : 'No topics in this category. Be the first to create one!'}
+        </p>
       ) : (
         <div className="posts-list">
           {filteredPosts.map((post, index) => (

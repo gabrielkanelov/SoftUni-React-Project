@@ -5,6 +5,7 @@ import { PostDetails } from '../pages/PostDetails/PostDetails'
 import { Login } from '../pages/Login/Login'
 import { Register } from '../pages/Register/Register'
 import { Profile } from '../pages/Profile/Profile'
+import { Activity } from '../pages/Activity/Activity'
 import { Create } from '../pages/Create/Create'
 import { Edit } from '../pages/Edit/Edit'
 import { PrivateRoute } from './PrivateRoute'
@@ -31,6 +32,14 @@ function AppRouter() {
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/activity"
+            element={
+              <PrivateRoute>
+                <Activity />
               </PrivateRoute>
             }
           />

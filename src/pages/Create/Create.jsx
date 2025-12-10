@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { createPost } from '../../services/postService'
 import { useAuth } from '../../contexts/AuthContext'
 import { VALIDATION_RULES, ROUTES, GAMING_CATEGORIES } from '../../config/constants'
+import { trackActivity, ACTIVITY_TYPES } from '../../utils/activityTracker'
 import './Create.css'
 
 // Create topic page - form for adding new gaming discussion
@@ -59,7 +60,13 @@ function Create() {
       setErrors({})
 
       // Create topic with current user as author and selected category
-      await createPost(title, content, category, user.email)
+      const newPost = await createPost(title, content, category, user.email)
+      
+      // Track activity
+      trackActivity(ACTIVITY_TYPES.POST_CREATED, {
+        postTitle: title,
+        postId: newPost?._id
+      })
 
       // Redirect to forum on success
       navigate(ROUTES.FORUM)

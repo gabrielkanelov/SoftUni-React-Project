@@ -53,6 +53,7 @@ export const ROUTES = {
   CREATE: '/create',
   EDIT: '/edit',
   PROFILE: '/profile',
+  ACTIVITY: '/activity',
   TOPIC_DETAILS: '/topics',
 }
 

@@ -1,6 +1,7 @@
 import { deleteComment } from '../services/commentService'
 import { useAuth } from '../contexts/AuthContext'
 import { DATE_FORMAT_OPTIONS } from '../config/constants'
+import { trackActivity, ACTIVITY_TYPES } from '../utils/activityTracker'
 import './CommentList.css'
 
 // CommentList component - displays all comments for a post
@@ -15,6 +16,12 @@ function CommentList({ comments, postId, onCommentDeleted }) {
 
     try {
       await deleteComment(postId, commentId)
+      
+      // Track activity
+      trackActivity(ACTIVITY_TYPES.COMMENT_DELETED, {
+        postId: postId
+      })
+      
       onCommentDeleted(commentId)
     } catch (err) {
       console.error('Failed to delete comment:', err)

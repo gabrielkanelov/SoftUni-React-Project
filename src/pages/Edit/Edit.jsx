@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getPostById, updatePost } from '../../services/postService'
 import { useAuth } from '../../contexts/AuthContext'
 import { VALIDATION_RULES, ROUTES, GAMING_CATEGORIES } from '../../config/constants'
+import { trackActivity, ACTIVITY_TYPES } from '../../utils/activityTracker'
 import './Edit.css'
 
 // Edit topic page - form to update existing gaming topic
@@ -91,6 +92,12 @@ function Edit() {
 
       // Update topic with new values
       await updatePost(id, title, content, category)
+      
+      // Track activity
+      trackActivity(ACTIVITY_TYPES.POST_EDITED, {
+        postTitle: title,
+        postId: id
+      })
 
       // Redirect to topic details on success
       navigate(`${ROUTES.TOPIC_DETAILS}/${id}`)
