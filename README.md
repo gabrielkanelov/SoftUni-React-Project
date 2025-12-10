@@ -12,6 +12,22 @@ A modern gaming discussion forum with a React 19 + Vite frontend and a Node/Expr
 - **Profiles**: Authenticated profile view with basic stats
 - **Authentication**: JWT login/register with protected/private routes and guest-only guards
 
+### Instagram-Style Features
+- **Like/Comment/Save Actions**: Modern action bar on each post card
+- **Saved/Bookmarked Posts**: Bookmark topics and view them in `/saved` (auth required)
+- **Search History**: Recent searches with dropdown suggestions
+- **Auto-focus Comment**: Click comment button auto-scrolls to comment form
+
+### User Activity Tracking
+- **Recent Activity Page** (`/activity`): View all your interactions
+  - Posts created, edited, deleted
+  - Posts you've liked with post title
+  - Comments you've added with comment preview (first 120 chars)
+  - Comments you've deleted
+  - Posts you've viewed with category info
+- **Activity Details**: Each activity shows timestamp, post title, and comment previews
+- **Quick Navigation**: Jump to any post from activity history
+
 ### Technical Features
 - React Router v6+ with dynamic routing and guards (PrivateRoute, GuestRoute)
 - AuthContext + localStorage persistence of JWT
@@ -64,20 +80,22 @@ npm run dev
 ```
 src/
 ├── components/          # Reusable UI components
-│   ├── Header.jsx       # Navigation header
+│   ├── Header.jsx       # Navigation header with search & user menu
 │   ├── Footer.jsx       # Site footer
-│   ├── PostCard.jsx     # Topic card component
-│   ├── CommentForm.jsx  # Comment creation form
-│   └── CommentList.jsx  # Comments display and editing
+│   ├── PostCard.jsx     # Instagram-style topic card (like, comment, save)
+│   ├── CommentForm.jsx  # Comment creation form with auto-focus
+│   └── CommentList.jsx  # Comments display and deletion
 ├── pages/              # Page components
 │   ├── Home/           # Landing page
-│   ├── Catalog/        # Forum topics list with category filtering
+│   ├── Catalog/        # Forum topics list with category filtering & search
 │   ├── PostDetails/    # Topic details with comments
 │   ├── Create/         # Create new topic
 │   ├── Edit/           # Edit existing topic
 │   ├── Login/          # User login
 │   ├── Register/       # User registration
-│   └── Profile/        # User profile
+│   ├── Profile/        # User profile with stats
+│   ├── Activity/       # Recent activity history
+│   └── SavedPosts/     # Bookmarked topics
 ├── contexts/           # React contexts
 │   └── AuthContext.jsx # Authentication state management
 ├── routes/             # Route configuration
@@ -88,25 +106,29 @@ src/
 │   ├── postService.js  # Topic CRUD + likes
 │   ├── commentService.js # Comment operations
 │   └── profileService.js # Profile fetch + stats
+├── utils/              # Utility functions
+│   └── activityTracker.js # Activity tracking and storage
 └── config/             # Configuration files
-    └── constants.js    # App constants (routes, categories)
+    └── constants.js    # App constants (routes, categories, validation)
 ```
 
 ## 🛣️ Routes
 
 ### Public Routes
 - `/` - Home landing page
-- `/forum` and `/catalog` - Topic list with category filtering
-- `/topics/:postId` - Topic details with comments
+- `/forum` and `/catalog` - Topic list with category filtering and search
+- `/topics/:postId` - Topic details with comments and actions
 
 ### Guest-Only Routes (redirect to forum if authenticated)
 - `/login` - User login
 - `/register` - User registration
 
 ### Protected Routes (require authentication)
-- `/profile` - Current user profile
+- `/profile` - Current user profile and stats
 - `/create` - Create new topic
 - `/edit/:id` - Edit existing topic
+- `/activity` - View recent activity history (likes, posts, comments)
+- `/saved` - View saved/bookmarked topics
 
 ## 🎨 Styling
 
@@ -136,20 +158,28 @@ The application features a modern design system with:
 - Create topics with title, content, and category
 - Edit your own topics
 - Delete your own topics
-- Like topics from other users
+- Like/unlike topics from other users
 - Filter topics by gaming category
+- Search topics by title, content, or author
+- View search history with dropdown
 
 ### Comments
-- Add comments to topics
-- Edit your own comments (shows "edited" indicator)
+- Add comments to topics (auto-focus form)
 - Delete your own comments
 - Real-time comment count display
+- Comment content tracked in activity
 
-### Categories
-- 🖥️ **PC Games** - Discuss PC gaming releases and experiences
-- 🎮 **Console Games** - PlayStation, Xbox, Nintendo discussions
-- 📱 **Mobile Games** - Mobile gaming community
-- 📰 **Gaming News** - Latest industry news and announcements
+### Saving & Bookmarks
+- Bookmark topics with save button
+- View all saved topics in `/saved`
+- Persistent save state across sessions
+
+### Activity Tracking
+- View all your recent interactions in `/activity`
+- See what posts you created, edited, deleted
+- See which posts you've liked with timestamps
+- See comments you've added with previews
+- Track when you viewed posts with category info
 
 ## 🛠️ Technologies
 
@@ -166,10 +196,14 @@ The application features a modern design system with:
 
 ## ✅ Quick verification (manual)
 - Register, then login (token stored in localStorage).
-- Create a topic; verify it appears in `/forum` and in Mongo `posts` collection.
-- Like/unlike a topic; confirm likes increment/decrement in Mongo.
-- Add a comment on a topic; confirm embedded comment is stored in Mongo.
+- Create a topic; verify it appears in `/forum` and in activity `/activity`.
+- Like/unlike a topic; confirm it's tracked in activity.
+- Add a comment on a topic; confirm comment preview shows in activity.
+- Bookmark a topic; view it in `/saved`.
+- Search for a topic; verify search appears in search history dropdown.
+- Click on a topic; verify view is tracked in activity (only once per session).
 - Open Profile to fetch user data with token (requires authenticated session).
+- Check Activity page to see all your interactions with timestamps and details.
 
 ## 🤝 Contributing
 
