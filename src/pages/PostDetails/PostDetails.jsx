@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { CommentList } from '../../components/CommentList'
 import { CommentForm } from '../../components/CommentForm'
 import { ROUTES, GAMING_CATEGORIES } from '../../config/constants'
-import { trackActivity, ACTIVITY_TYPES } from '../../utils/activityTracker'
+import { trackActivity, ACTIVITY_TYPES, activityExists } from '../../utils/activityTracker'
 import './PostDetails.css'
 
 // Topic Details page - shows full gaming topic with comments
@@ -22,6 +22,7 @@ function PostDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [deleting, setDeleting] = useState(false)
+  const [viewTracked, setViewTracked] = useState(false)
 
   const isAuthor = user && post && post.author === user.email
   const hasLiked = post && user && post.likedBy?.includes(user.email)
@@ -37,11 +38,15 @@ function PostDetails() {
         const postData = await getPostById(postId)
         setPost(postData)
         
-        // Track view activity
-        trackActivity(ACTIVITY_TYPES.POST_VIEWED, {
-          postTitle: postData.title,
-          postId: postData._id || postData.id
-        })
+        // Track view activity only once per session
+        if (!viewTracked && !activityExists(ACTIVITY_TYPES.POST_VIEWED, postId)) {
+          trackActivity(ACTIVITY_TYPES.POST_VIEWED, {
+            postTitle: postData.title,
+            postId: postData._id || postData.id,
+            category: postData.category
+          })
+          setViewTracked(true)
+        }
 
         const commentsData = await getCommentsByPostId(postId)
         setComments(commentsData)
@@ -54,7 +59,7 @@ function PostDetails() {
     }
 
     loadData()
-  }, [postId])
+  }, [postId, viewTracked])
 
   // Handle like/unlike
   const handleLike = async () => {

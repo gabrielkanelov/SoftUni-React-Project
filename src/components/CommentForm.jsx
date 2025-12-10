@@ -53,9 +53,11 @@ function CommentForm({ postId, onCommentAdded }) {
       // Add comment
       const newComment = await addComment(postId, user.email, content)
       
-      // Track activity
+      // Track activity with comment preview
       trackActivity(ACTIVITY_TYPES.COMMENT_ADDED, {
-        postId: postId
+        postId: postId,
+        commentContent: content.substring(0, 120),
+        commenterEmail: user.email
       })
 
       // Call callback to add comment to UI

@@ -101,11 +101,38 @@
 .activity-card-detail {
     color: #667eea;
     font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.activity-category {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.activity-comment-preview {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+    border-left: 3px solid #667eea;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.comment-quote {
+    font-size: 1.2rem;
+    line-height: 1;
+    flex-shrink: 0;
 }
 
 .activity-card-time {

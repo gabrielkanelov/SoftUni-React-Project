@@ -50,6 +50,12 @@ export function trackActivity(type, data = {}) {
   }
 }
 
+// Check if activity already exists (prevent duplicates for views)
+export function activityExists(type, postId) {
+  const activities = getActivities()
+  return activities.some(a => a.type === type && a.postId === postId)
+}
+
 // Get all activities
 export function getActivities() {
   try {

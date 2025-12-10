@@ -48,7 +48,16 @@ function Activity() {
                   </div>
                   {activity.postTitle && (
                     <div className="activity-card-detail">
-                      {activity.postTitle}
+                      "<strong>{activity.postTitle}</strong>"
+                      {activity.category && (
+                        <span className="activity-category"> in {activity.category}</span>
+                      )}
+                    </div>
+                  )}
+                  {activity.commentContent && (
+                    <div className="activity-comment-preview">
+                      <span className="comment-quote">💭</span>
+                      "<em>{activity.commentContent}</em>"
                     </div>
                   )}
                   <div className="activity-card-time">
