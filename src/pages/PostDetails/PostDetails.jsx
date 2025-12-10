@@ -51,13 +51,13 @@ function PostDetails() {
 
   // Handle like/unlike
   const handleLike = async () => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user?.token) {
       navigate(ROUTES.LOGIN)
       return
     }
 
     try {
-      const updatedPost = await likePost(post.id, user.email)
+      const updatedPost = await likePost(post.id, user.token)
       setPost(updatedPost)
     } catch (err) {
       setError('Failed to update like')

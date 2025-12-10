@@ -9,14 +9,24 @@ import './Login.css'
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  // On submit, call login from context and redirect to catalog
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    login(email, password)
-    navigate('/catalog')
+    setError('')
+    setLoading(true)
+
+    try {
+      await login(email, password)
+      navigate(ROUTES.FORUM)
+    } catch (err) {
+      setError(err.message || 'Влизането се провали')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -41,7 +51,10 @@ function Login() {
             required
           />
         </label>
-        <button type="submit">Login</button>
+        {error && <div className="error-text">{error}</div>}
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
         <div className="form-footer">
           Нямаш акаунт? <Link to={ROUTES.REGISTER}>Регистрирай се</Link>
         </div>

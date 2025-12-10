@@ -1,86 +1,54 @@
-// Profile service - handles user profile data and statistics
-// In a real app, this would fetch from a backend API
-import { API_DELAYS } from '../config/constants'
 import { getPostsByAuthor } from './postService'
 import { getCommentsByAuthor } from './commentService'
 
-// Mock user profiles database
-let userProfiles = {
-  admin: {
-    email: 'admin',
-    username: 'Admin User',
-    bio: 'Administrator of this forum',
-    joinDate: new Date('2025-11-01'),
-    avatar: '👨‍💼',
-  },
-  'user123@example.com': {
-    email: 'user123@example.com',
-    username: 'User One',
-    bio: 'Active community member',
-    joinDate: new Date('2025-11-15'),
-    avatar: '👤',
-  },
-  'dev@example.com': {
-    email: 'dev@example.com',
-    username: 'Developer',
-    bio: 'Senior developer sharing knowledge',
-    joinDate: new Date('2025-10-20'),
-    avatar: '👨‍💻',
-  },
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
+const getStoredToken = () => {
+  try {
+    const raw = localStorage.getItem('auth_token')
+    return raw ? JSON.parse(raw) : null
+  } catch (e) {
+    return localStorage.getItem('auth_token') || null
+  }
 }
 
-// Get user profile by email
-export function getUserProfile(email) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const profile = userProfiles[email]
-      if (profile) {
-        resolve({ ...profile })
-      } else {
-        // Return default profile if user doesn't exist
-        resolve({
-          email,
-          username: email.split('@')[0] || 'Unknown User',
-          bio: 'Member of the community',
-          joinDate: new Date(),
-          avatar: '👤',
-        })
-      }
-    }, API_DELAYS.POST_OPERATIONS)
-  })
+const authHeaders = (token) => (token ? { Authorization: `Bearer ${token}` } : {})
+
+const handleResponse = async (res) => {
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.message || `Request failed with status ${res.status}`)
+  }
+  return res.json()
 }
 
-// Get user's posts count
-export function getUserPostsCount(email) {
-  return new Promise((resolve) => {
-    setTimeout(async () => {
-      const userPosts = await getPostsByAuthor(email)
-      resolve(userPosts.length)
-    }, API_DELAYS.POST_OPERATIONS)
+// Get user profile from backend
+export async function getUserProfile(_email, tokenOverride) {
+  const token = tokenOverride || getStoredToken()
+  if (!token) throw new Error('Missing auth token')
+
+  const res = await fetch(`${API_BASE}/api/auth/profile`, {
+    headers: {
+      ...authHeaders(token),
+    },
   })
+
+  return handleResponse(res)
 }
 
-// Get user's comments count
-export function getUserCommentsCount(email) {
-  return new Promise((resolve) => {
-    setTimeout(async () => {
-      const userComments = await getCommentsByAuthor(email)
-      resolve(userComments.length)
-    }, API_DELAYS.POST_OPERATIONS)
-  })
+// Count posts by author (client-side filter after fetching all posts)
+export async function getUserPostsCount(email) {
+  const posts = await getPostsByAuthor(email)
+  return posts.length
 }
 
-// Update user profile
-export function updateUserProfile(email, updatedData) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const profile = userProfiles[email]
-      if (profile) {
-        userProfiles[email] = { ...profile, ...updatedData }
-        resolve(userProfiles[email])
-      } else {
-        reject(new Error('User profile not found'))
-      }
-    }, API_DELAYS.POST_OPERATIONS)
-  })
+// Count comments by author (client-side aggregation)
+export async function getUserCommentsCount(email) {
+  const comments = await getCommentsByAuthor(email)
+  return comments.length
+}
+
+// Placeholder for updating user profile (not implemented in API)
+export async function updateUserProfile() {
+  throw new Error('Updating user profile is not implemented in the current API')
 }

@@ -46,11 +46,11 @@ function Details() {
 
   // Handle post like
   const handleLike = async () => {
-    if (!isAuthenticated || !post) return
+    if (!isAuthenticated || !post || !user?.token) return
 
     try {
       setLiking(true)
-      const updated = await likePost(post.id, user.email)
+      const updated = await likePost(post.id, user.token)
       setPost(updated)
     } catch (err) {
       console.error('Failed to like post:', err)

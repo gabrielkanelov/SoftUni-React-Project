@@ -1,120 +1,150 @@
-// Simulated topics database - in real app would use Firebase or API
-// Import configuration constants to avoid hardcoding values
-import { API_DELAYS, SEED_TOPICS } from '../config/constants'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-let posts = [...SEED_TOPICS]
-
-let nextPostId = 5
-
-// Get all topics - simulates fetching from backend
-export function getAllPosts() {
-  return new Promise((resolve) => {
-    setTimeout(() => resolve([...posts]), API_DELAYS.POST_OPERATIONS)
-  })
+// Map frontend category ids to backend numeric enums
+const CATEGORY_MAP = {
+  'pc-games': 1,
+  'console-games': 2,
+  'mobile-games': 3,
+  'gaming-news': 4,
+  events: 5,
+  guides: 6,
 }
 
-// Get topics by category
-export function getPostsByCategory(categoryId) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const categoryPosts = posts.filter((p) => p.category === categoryId)
-      resolve([...categoryPosts])
-    }, API_DELAYS.POST_OPERATIONS)
-  })
+const reverseCategory = Object.entries(CATEGORY_MAP).reduce((acc, [key, val]) => {
+  acc[val] = key
+  return acc
+}, {})
+
+const mapCategoryToApi = (categoryId) => CATEGORY_MAP[categoryId] ?? CATEGORY_MAP['pc-games']
+const mapCategoryFromApi = (categoryNumber) => reverseCategory[categoryNumber] ?? 'pc-games'
+
+const getStoredToken = () => {
+  try {
+    const raw = localStorage.getItem('auth_token')
+    return raw ? JSON.parse(raw) : null
+  } catch (e) {
+    return localStorage.getItem('auth_token') || null
+  }
 }
 
-// Get single topic by id
-export function getPostById(id) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const post = posts.find((p) => p.id === Number(id))
-      if (post) {
-        resolve({ ...post })
-      } else {
-        reject(new Error('Topic not found'))
-      }
-    }, API_DELAYS.POST_OPERATIONS)
-  })
+const authHeaders = (token) => (token ? { Authorization: `Bearer ${token}` } : {})
+
+const handleResponse = async (res) => {
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.message || `Request failed with status ${res.status}`)
+  }
+  return res.json()
 }
 
-// Create new topic - called when user submits Create form
-export function createPost(title, content, category, author) {
-  return new Promise((resolve) => {
-    const newPost = {
-      id: nextPostId++,
-      title,
-      content,
-      category,
-      author,
-      createdAt: new Date(),
-      likes: 0,
-      likedBy: [],
-    }
-    posts.push(newPost)
-    setTimeout(() => resolve(newPost), API_DELAYS.POST_OPERATIONS)
-  })
+const mapPostFromApi = (post) => ({
+  id: post._id,
+  title: post.title,
+  content: post.content,
+  category: mapCategoryFromApi(post.category),
+  author: post.author,
+  likes: post.likes ?? 0,
+  likedBy: post.likedBy ?? [],
+  comments: post.comments ?? [],
+  createdAt: post.createdAt,
+})
+
+export async function getAllPosts() {
+  const res = await fetch(`${API_BASE}/api/posts`)
+  const data = await handleResponse(res)
+  return data.map(mapPostFromApi)
 }
 
-// Update existing topic - only author can do this
-export function updatePost(id, title, content, category) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const post = posts.find((p) => p.id === Number(id))
-      if (!post) {
-        reject(new Error('Topic not found'))
-        return
-      }
-      post.title = title
-      post.content = content
-      post.category = category
-      resolve({ ...post })
-    }, API_DELAYS.POST_OPERATIONS)
-  })
+export async function getPostsByCategory(categoryId) {
+  const categoryNumber = mapCategoryToApi(categoryId)
+  const res = await fetch(`${API_BASE}/api/posts/category/${categoryNumber}`)
+  const data = await handleResponse(res)
+  return data.map(mapPostFromApi)
 }
 
-// Delete topic - only author can do this
-export function deletePost(id) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const index = posts.findIndex((p) => p.id === Number(id))
-      if (index === -1) {
-        reject(new Error('Topic not found'))
-        return
-      }
-      posts.splice(index, 1)
-      resolve({ success: true })
-    }, API_DELAYS.POST_OPERATIONS)
-  })
+export async function getPostById(id) {
+  const res = await fetch(`${API_BASE}/api/posts/${id}`)
+  const data = await handleResponse(res)
+  return mapPostFromApi(data)
 }
 
-// Like topic - adds/removes user from likedBy array
-export function likePost(postId, userEmail) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const post = posts.find((p) => p.id === Number(postId))
-      if (!post) {
-        reject(new Error('Topic not found'))
-        return
-      }
-      const alreadyLiked = post.likedBy.includes(userEmail)
-      if (alreadyLiked) {
-        post.likedBy = post.likedBy.filter((email) => email !== userEmail)
-        post.likes--
-      } else {
-        post.likedBy.push(userEmail)
-        post.likes++
-      }
-      resolve({ ...post })
-    }, API_DELAYS.POST_OPERATIONS)
+export async function createPost(title, content, categoryId, _author, tokenOverride) {
+  const token = tokenOverride || getStoredToken()
+  if (!token) throw new Error('Missing auth token')
+
+  const payload = {
+    title,
+    content,
+    category: mapCategoryToApi(categoryId),
+  }
+
+  const res = await fetch(`${API_BASE}/api/posts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(payload),
   })
+
+  const data = await handleResponse(res)
+  return mapPostFromApi(data)
 }
 
-// Get topics by author email
-export function getPostsByAuthor(authorEmail) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const authorPosts = posts.filter((p) => p.author === authorEmail)
-      resolve([...authorPosts])
-    }, API_DELAYS.POST_OPERATIONS)
+export async function updatePost(id, title, content, categoryId, tokenOverride) {
+  const token = tokenOverride || getStoredToken()
+  if (!token) throw new Error('Missing auth token')
+
+  const payload = {
+    title,
+    content,
+    category: mapCategoryToApi(categoryId),
+  }
+
+  const res = await fetch(`${API_BASE}/api/posts/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeaders(token),
+    },
+    body: JSON.stringify(payload),
   })
+
+  const data = await handleResponse(res)
+  return mapPostFromApi(data)
+}
+
+export async function deletePost(id, tokenOverride) {
+  const token = tokenOverride || getStoredToken()
+  if (!token) throw new Error('Missing auth token')
+
+  const res = await fetch(`${API_BASE}/api/posts/${id}`, {
+    method: 'DELETE',
+    headers: {
+      ...authHeaders(token),
+    },
+  })
+
+  await handleResponse(res)
+  return { success: true }
+}
+
+export async function likePost(postId, tokenOverride) {
+  const token = tokenOverride || getStoredToken()
+  if (!token) throw new Error('Missing auth token')
+
+  const res = await fetch(`${API_BASE}/api/posts/${postId}/like`, {
+    method: 'POST',
+    headers: {
+      ...authHeaders(token),
+    },
+  })
+
+  const data = await handleResponse(res)
+  return mapPostFromApi(data)
+}
+
+export async function getPostsByAuthor(authorEmail) {
+  const all = await getAllPosts()
+  return all.filter((p) => p.author === authorEmail)
 }

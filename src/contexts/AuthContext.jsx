@@ -1,54 +1,95 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { STORAGE_KEYS } from '../config/constants'
 
-// Create context for auth - this will be accessible from any component
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const TOKEN_KEY = 'auth_token'
 const AuthContext = createContext(null)
 const STORAGE_KEY = STORAGE_KEYS.AUTH_USER
+
+const handleResponse = async (res) => {
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.message || 'Authentication failed')
+  }
+  return res.json()
+}
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
 
-  // On mount, check if there's a saved user in localStorage
-  // This way the user stays logged in even after refresh
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      setUser(JSON.parse(stored))
+    const storedUserRaw = localStorage.getItem(STORAGE_KEY)
+    const storedToken = localStorage.getItem(TOKEN_KEY)
+
+    if (storedUserRaw) {
+      try {
+        const parsed = JSON.parse(storedUserRaw)
+        const token = parsed?.token || storedToken || null
+        setUser(token ? { ...parsed, token } : null)
+      } catch (err) {
+        console.error('Failed to parse stored user', err)
+        setUser(null)
+      }
+    } else if (storedToken) {
+      setUser({ token: storedToken })
     }
   }, [])
 
-  // Whenever user changes, sync to localStorage
-  // If user logs out (user becomes null), remove from storage
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
-    } else {
-      localStorage.removeItem(STORAGE_KEY)
+  const persistSession = (nextUser) => {
+    setUser(nextUser)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextUser))
+    if (nextUser?.token) {
+      localStorage.setItem(TOKEN_KEY, nextUser.token)
     }
-  }, [user])
+  }
 
-  // Dummy login - in real app this would call an API
-  // For now just store the email as the user object
-  const login = (email, password) => {
-    const nextUser = { email }
-    setUser(nextUser)
+  const clearSession = () => {
+    setUser(null)
+    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(TOKEN_KEY)
+  }
+
+  const login = async (email, password) => {
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+
+    const data = await handleResponse(res)
+    const nextUser = {
+      email: data.user?.email || email,
+      name: data.user?.name || '',
+      token: data.token,
+    }
+
+    persistSession(nextUser)
     return nextUser
   }
 
-  // Same as login for this demo
-  const register = (email, password) => {
-    const nextUser = { email }
-    setUser(nextUser)
+  const register = async (email, password, confirmPassword) => {
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, confirmPassword }),
+    })
+
+    const data = await handleResponse(res)
+    const nextUser = {
+      email: data.user?.email || email,
+      name: data.user?.name || '',
+      token: data.token,
+    }
+
+    persistSession(nextUser)
     return nextUser
   }
 
-  // Clear user state to log out
-  const logout = () => setUser(null)
+  const logout = () => clearSession()
 
-  // Bundle everything we want to expose
   const value = {
     user,
-    isAuthenticated: Boolean(user),
+    isAuthenticated: Boolean(user?.token),
     login,
     register,
     logout,
@@ -57,7 +98,6 @@ function AuthProvider({ children }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-// Custom hook to use auth context - makes it easier to consume
 function useAuth() {
   const context = useContext(AuthContext)
   if (!context) {

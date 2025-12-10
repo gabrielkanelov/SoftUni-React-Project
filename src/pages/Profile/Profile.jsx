@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getUserProfile, getUserPostsCount, getUserCommentsCount } from '../../services/profileService'
+import { useAuth } from '../../contexts/AuthContext'
 import { ROUTES } from '../../config/constants'
 import './Profile.css'
 
@@ -9,7 +9,7 @@ import './Profile.css'
 // Shows user bio, join date, posts and comments count
 // Accessible from anywhere by viewing another user's profile
 function Profile() {
-  const { userId } = useParams()
+  const { user } = useAuth()
   const [profile, setProfile] = useState(null)
   const [postsCount, setPostsCount] = useState(0)
   const [commentsCount, setCommentsCount] = useState(0)
@@ -22,10 +22,14 @@ function Profile() {
         setLoading(true)
         setError('')
 
-        const userEmail = userId || 'unknown'
-        const profileData = await getUserProfile(userEmail)
-        const posts = await getUserPostsCount(userEmail)
-        const comments = await getUserCommentsCount(userEmail)
+        if (!user?.email || !user?.token) {
+          setError('Missing user session')
+          return
+        }
+
+        const profileData = await getUserProfile(user.email, user.token)
+        const posts = await getUserPostsCount(user.email)
+        const comments = await getUserCommentsCount(user.email)
 
         setProfile(profileData)
         setPostsCount(posts)
@@ -39,7 +43,7 @@ function Profile() {
     }
 
     loadProfile()
-  }, [userId])
+  }, [user])
 
   if (loading) {
     return (
@@ -64,8 +68,8 @@ function Profile() {
         <div className="profile-header">
           <div className="profile-avatar">{profile?.avatar || '👤'}</div>
           <div className="profile-info">
-            <h1 className="profile-username">{profile?.username}</h1>
-            <p className="profile-email">{profile?.email}</p>
+            <h1 className="profile-username">{profile?.name || profile?.email || 'Member'}</h1>
+            <p className="profile-email">{profile?.email || user?.email}</p>
           </div>
         </div>
 
@@ -87,7 +91,7 @@ function Profile() {
           <div className="stat">
             <span className="stat-label">Member Since</span>
             <span className="stat-value">
-              {profile?.joinDate ? new Date(profile.joinDate).toLocaleDateString() : 'N/A'}
+              {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : 'N/A'}
             </span>
           </div>
         </div>

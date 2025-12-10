@@ -10,17 +10,28 @@ function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const { register } = useAuth()
   const navigate = useNavigate()
 
-  // On submit, register the user and go to catalog
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (password !== confirmPassword) {
       return
     }
-    register(email, password)
-    navigate('/catalog')
+
+    setError('')
+    setLoading(true)
+
+    try {
+      await register(email, password, confirmPassword)
+      navigate(ROUTES.FORUM)
+    } catch (err) {
+      setError(err.message || 'Регистрацията се провали')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -58,8 +69,9 @@ function Register() {
             <span className="error-text">Паролите не съвпадат</span>
           )}
         </label>
-        <button type="submit" disabled={confirmPassword !== password}>
-          Create Account
+        {error && <div className="error-text">{error}</div>}
+        <button type="submit" disabled={confirmPassword !== password || loading}>
+          {loading ? 'Creating account...' : 'Create Account'}
         </button>
         <div className="form-footer">
           Имаш акаунт? <Link to={ROUTES.LOGIN}>Влез</Link>

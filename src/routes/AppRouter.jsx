@@ -24,8 +24,16 @@ function AppRouter() {
           {/* Public pages - anyone can access */}
           <Route path="/" element={<Home />} />
           <Route path="/forum" element={<Catalog />} />
+          <Route path="/catalog" element={<Catalog />} />
           <Route path="/topics/:postId" element={<PostDetails />} />
-          <Route path="/profile/:userId" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
           
           {/* Guest-only pages - only for non-authenticated users */}
           <Route

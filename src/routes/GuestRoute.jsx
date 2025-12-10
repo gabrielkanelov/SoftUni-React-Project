@@ -9,7 +9,7 @@ function GuestRoute({ children }) {
 
   // Already logged in? No need to see login/register
   if (isAuthenticated) {
-    return <Navigate to="/catalog" replace />
+    return <Navigate to="/forum" replace />
   }
 
   // Not logged in, show the guest page (login or register)

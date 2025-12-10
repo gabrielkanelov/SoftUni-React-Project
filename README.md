@@ -1,26 +1,23 @@
-# 🎮 Gaming Forum - React Application
+# 🎮 Gaming Forum - React + Node + Mongo
 
-A modern, fully-featured gaming discussion forum built with React 19 and Vite. Connect with gamers worldwide to discuss PC games, console titles, mobile games, and stay updated with gaming news.
+A modern gaming discussion forum with a React 19 + Vite frontend and a Node/Express + MongoDB backend. Discuss PC, console, and mobile games, share news, and collaborate through comments and likes.
 
 ## ✨ Features
 
 ### Core Functionality
-- **Gaming Categories**: PC Games 🖥️, Console Games 🎮, Mobile Games 📱, Gaming News 📰
-- **Topic Management**: Create, edit, and delete gaming discussion topics
-- **Interactive Comments**: Add, edit, and delete comments on topics
-- **User Profiles**: View user profiles with their topics and activity
-- **Like System**: Like topics to show support (authenticated users only)
-- **Authentication**: Complete user authentication with login/register
-- **Protected Routes**: Private routes for authenticated users, guest-only routes for login/register
+- **Gaming Categories**: PC 🖥️, Console 🎮, Mobile 📱, News 📰
+- **Topics CRUD**: Create, read, update, delete topics (authors only for edit/delete)
+- **Comments**: Add/delete comments on topics (auth required)
+- **Likes**: Like/unlike topics (auth required)
+- **Profiles**: Authenticated profile view with basic stats
+- **Authentication**: JWT login/register with protected/private routes and guest-only guards
 
 ### Technical Features
-- React Router v6 with dynamic routing
-- AuthContext with localStorage persistence
-- PrivateRoute and GuestRoute wrappers for route protection
-- Modern gradient-based UI with purple/blue color scheme
-- Responsive design for mobile and desktop
-- Smooth transitions and hover effects
-- Custom scrollbar styling
+- React Router v6+ with dynamic routing and guards (PrivateRoute, GuestRoute)
+- AuthContext + localStorage persistence of JWT
+- REST API via Node/Express + MongoDB (Mongoose)
+- Vite build/dev, ESLint
+- Responsive UI with modern styling
 
 ## 🚀 Getting Started
 
@@ -36,17 +33,31 @@ git clone https://github.com/gabrielkanelov/SoftUni-React-Project.git
 cd SoftUni-React-Project
 ```
 
-2. Install dependencies:
+2. Environment:
+    - Copy `.env.example` → `.env` in project root (sets `VITE_API_URL=http://localhost:5000`).
+    - Copy `backend/.env.example` → `backend/.env` and set `MONGODB_URI` (defaults to `mongodb://127.0.0.1:27017/gaming_forum`) and a `JWT_SECRET` value.
+
+3. Install dependencies:
 ```bash
 npm install
+cd backend && npm install
+cd ..
 ```
 
-3. Start the development server:
+4. Run backend (port 5000 by default):
+```bash
+cd backend
+npm run dev
+```
+
+5. Run frontend (Vite dev server, defaults to 5173):
 ```bash
 npm run dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173` (or the port shown in terminal)
+6. Open the app at the Vite URL shown (usually `http://localhost:5173`).
+
+7. MongoDB Compass: connect to `mongodb://127.0.0.1:27017/gaming_forum` to inspect stored users, posts, and embedded comments.
 
 ## 📁 Project Structure
 
@@ -73,19 +84,19 @@ src/
 │   ├── AppRouter.jsx   # Main router setup
 │   ├── PrivateRoute.jsx # Protected route wrapper
 │   └── GuestRoute.jsx  # Guest-only route wrapper
-├── services/           # API services
-│   ├── postService.js  # Topic CRUD operations
+├── services/           # API services (real REST calls)
+│   ├── postService.js  # Topic CRUD + likes
 │   ├── commentService.js # Comment operations
-│   └── profileService.js # User profile operations
+│   └── profileService.js # Profile fetch + stats
 └── config/             # Configuration files
-    └── constants.js    # App constants (routes, categories, seed data)
+    └── constants.js    # App constants (routes, categories)
 ```
 
 ## 🛣️ Routes
 
 ### Public Routes
-- `/` - Home landing page with hero section and features
-- `/forum` - Gaming forum with category filtering
+- `/` - Home landing page
+- `/forum` and `/catalog` - Topic list with category filtering
 - `/topics/:postId` - Topic details with comments
 
 ### Guest-Only Routes (redirect to forum if authenticated)
@@ -93,7 +104,7 @@ src/
 - `/register` - User registration
 
 ### Protected Routes (require authentication)
-- `/profile/:userId` - User profile
+- `/profile` - Current user profile
 - `/create` - Create new topic
 - `/edit/:id` - Edit existing topic
 
@@ -115,11 +126,9 @@ The application features a modern design system with:
 
 ## 🔑 Authentication
 
-The application uses a simplified authentication system with localStorage:
-- Login with any username/password (demo purposes)
-- User data persists in localStorage
-- Protected routes require authentication
-- Guest routes redirect authenticated users
+- JWT-based login/register against the backend (`/api/auth/login`, `/api/auth/register`).
+- Token persisted in `localStorage` (`auth_token`) via AuthContext.
+- Protected routes require a valid token; guest routes redirect authenticated users.
 
 ## 💬 Forum Features
 
@@ -152,7 +161,15 @@ The application uses a simplified authentication system with localStorage:
 
 ## 📝 Notes
 
-This is a frontend-only application with simulated backend services. All data is stored in memory and resets on page refresh. For a production application, connect to a real backend API.
+- Data persists in MongoDB; inspect with Compass at `mongodb://127.0.0.1:27017/gaming_forum`.
+- Backend defaults: `PORT=5000`, `MONGODB_URI` fallback to local Mongo; adjust in `backend/.env` as needed.
+
+## ✅ Quick verification (manual)
+- Register, then login (token stored in localStorage).
+- Create a topic; verify it appears in `/forum` and in Mongo `posts` collection.
+- Like/unlike a topic; confirm likes increment/decrement in Mongo.
+- Add a comment on a topic; confirm embedded comment is stored in Mongo.
+- Open Profile to fetch user data with token (requires authenticated session).
 
 ## 🤝 Contributing
 

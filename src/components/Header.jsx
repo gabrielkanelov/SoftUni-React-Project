@@ -29,7 +29,7 @@ function Header() {
           {isAuthenticated ? (
             <>
               <Link to={ROUTES.CREATE}>Create Topic</Link>
-              <Link to={`${ROUTES.PROFILE}/${user?.email}`} className="profile-link">
+              <Link to={ROUTES.PROFILE} className="profile-link">
                 👤 Profile
               </Link>
               <button type="button" onClick={handleLogout} className="linkish">

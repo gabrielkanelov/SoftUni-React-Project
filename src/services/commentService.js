@@ -1,71 +1,81 @@
-// Simulated comments database - in real app would use Firebase or API
-import { API_DELAYS, SEED_COMMENTS } from '../config/constants'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
-let comments = [...SEED_COMMENTS]
-
-let nextCommentId = 3
-// Get all comments for a specific post
-export function getCommentsByPostId(postId) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const postComments = comments.filter((c) => c.postId === Number(postId))
-      resolve([...postComments])
-    }, API_DELAYS.COMMENT_OPERATIONS)
-  })
+const getStoredToken = () => {
+  try {
+    const raw = localStorage.getItem('auth_token')
+    return raw ? JSON.parse(raw) : null
+  } catch (e) {
+    return localStorage.getItem('auth_token') || null
+  }
 }
 
-// Add new comment to a post
-export function addComment(postId, author, content) {
-  return new Promise((resolve) => {
-    const newComment = {
-      id: nextCommentId++,
-      postId: Number(postId),
-      author,
-      content,
-      createdAt: new Date(),
-    }
-    comments.push(newComment)
-    setTimeout(() => resolve(newComment), API_DELAYS.COMMENT_OPERATIONS)
-  })
+const authHeaders = (token) => (token ? { Authorization: `Bearer ${token}` } : {})
+
+const handleResponse = async (res) => {
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.message || `Request failed with status ${res.status}`)
+  }
+  return res.json()
 }
 
-// Update comment - only author can do this
-export function updateComment(commentId, content) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const comment = comments.find((c) => c.id === Number(commentId))
-      if (!comment) {
-        reject(new Error('Comment not found'))
-        return
-      }
-      comment.content = content
-      comment.updatedAt = new Date()
-      resolve({ ...comment })
-    }, API_DELAYS.COMMENT_OPERATIONS)
-  })
+const mapCommentFromApi = (comment) => ({
+  id: comment._id,
+  postId: comment.postId || comment.post,
+  author: comment.author,
+  content: comment.text || comment.content,
+  createdAt: comment.createdAt,
+  updatedAt: comment.updatedAt,
+})
+
+export async function getCommentsByPostId(postId) {
+  // Comments are embedded in the post; fetch the post and return its comments
+  const res = await fetch(`${API_BASE}/api/posts/${postId}`)
+  const data = await handleResponse(res)
+  return (data.comments || []).map(mapCommentFromApi)
 }
 
-// Delete comment - only author or post author can do this
-export function deleteComment(commentId) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const index = comments.findIndex((c) => c.id === Number(commentId))
-      if (index === -1) {
-        reject(new Error('Comment not found'))
-        return
-      }
-      comments.splice(index, 1)
-      resolve({ success: true })
-    }, API_DELAYS.COMMENT_OPERATIONS)
+export async function addComment(postId, _author, content, tokenOverride) {
+  const token = tokenOverride || getStoredToken()
+  if (!token) throw new Error('Missing auth token')
+
+  const res = await fetch(`${API_BASE}/api/posts/${postId}/comments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeaders(token),
+    },
+    body: JSON.stringify({ text: content }),
   })
+
+  const data = await handleResponse(res)
+  return (data.comments || []).map(mapCommentFromApi).at(-1)
 }
 
-// Get comments by author
-export function getCommentsByAuthor(authorEmail) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const authorComments = comments.filter((c) => c.author === authorEmail)
-      resolve([...authorComments])
-    }, API_DELAYS.COMMENT_OPERATIONS)
+export async function updateComment() {
+  throw new Error('Updating comments is not implemented in the current API')
+}
+
+export async function deleteComment(postId, commentId, tokenOverride) {
+  const token = tokenOverride || getStoredToken()
+  if (!token) throw new Error('Missing auth token')
+
+  const res = await fetch(`${API_BASE}/api/posts/${postId}/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      ...authHeaders(token),
+    },
   })
+
+  await handleResponse(res)
+  return { success: true }
+}
+
+export async function getCommentsByAuthor(authorEmail) {
+  const res = await fetch(`${API_BASE}/api/posts`)
+  const data = await handleResponse(res)
+  const comments = data.flatMap((post) => post.comments || [])
+  return comments
+    .filter((c) => c.author === authorEmail)
+    .map(mapCommentFromApi)
 }
