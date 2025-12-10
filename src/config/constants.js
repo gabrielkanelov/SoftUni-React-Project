@@ -54,6 +54,7 @@ export const ROUTES = {
   EDIT: '/edit',
   PROFILE: '/profile',
   ACTIVITY: '/activity',
+  SAVED: '/saved',
   TOPIC_DETAILS: '/topics',
 }
 

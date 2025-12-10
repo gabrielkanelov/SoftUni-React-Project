@@ -6,6 +6,7 @@ import { Login } from '../pages/Login/Login'
 import { Register } from '../pages/Register/Register'
 import { Profile } from '../pages/Profile/Profile'
 import { Activity } from '../pages/Activity/Activity'
+import { SavedPosts } from '../pages/SavedPosts/SavedPosts'
 import { Create } from '../pages/Create/Create'
 import { Edit } from '../pages/Edit/Edit'
 import { PrivateRoute } from './PrivateRoute'
@@ -40,6 +41,14 @@ function AppRouter() {
             element={
               <PrivateRoute>
                 <Activity />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/saved"
+            element={
+              <PrivateRoute>
+                <SavedPosts />
               </PrivateRoute>
             }
           />

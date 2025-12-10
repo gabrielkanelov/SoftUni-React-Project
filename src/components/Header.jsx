@@ -164,6 +164,14 @@ function Header() {
                     📊 Activity
                   </Link>
                   
+                  <Link
+                    to={ROUTES.SAVED}
+                    className="dropdown-item"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    📑 Saved
+                  </Link>
+                  
                   <button
                     type="button"
                     onClick={handleLogout}

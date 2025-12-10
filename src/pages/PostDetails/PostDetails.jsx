@@ -198,7 +198,7 @@ function PostDetails() {
       </article>
 
       {/* Comments Section */}
-      <section className="comments-section">
+      <section id="comments" className="comments-section">
         <h2>Comments ({comments.length})</h2>
 
         {/* Comment Form - only for authenticated users */}

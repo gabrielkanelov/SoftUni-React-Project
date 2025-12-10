@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { addComment } from '../services/commentService'
 import { VALIDATION_RULES, STORAGE_KEYS, UI_CONSTANTS } from '../config/constants'
 import { trackActivity, ACTIVITY_TYPES } from '../utils/activityTracker'
@@ -11,6 +11,16 @@ function CommentForm({ postId, onCommentAdded }) {
   const [content, setContent] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const textareaRef = useRef(null)
+
+  // Auto-focus textarea when navigating from comment button
+  useEffect(() => {
+    if (window.location.hash === '#comments') {
+      setTimeout(() => {
+        textareaRef.current?.focus()
+      }, 100)
+    }
+  }, [])
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -66,6 +76,7 @@ function CommentForm({ postId, onCommentAdded }) {
       {error && <div className="error-message">{error}</div>}
 
       <textarea
+        ref={textareaRef}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Write a comment..."

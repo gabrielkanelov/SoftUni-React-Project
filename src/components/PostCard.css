@@ -1,44 +1,23 @@
-/* Gaming Topic Card component styling */
+/* Instagram-style Gaming Topic Card */
 .post-card {
-    border: 2px solid #e0e7ff;
-    border-radius: 12px;
-    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
     background: #ffffff;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
-}
-
-.post-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    opacity: 1;
-    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    padding: 0;
 }
 
 .post-card:hover {
-    border-color: #667eea;
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.25);
-    transform: translateY(-3px);
-    background: #ffffff;
+    border-color: #d1d5db;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.post-card:hover::before {
-    height: 6px;
-}
-
-.post-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    gap: 1rem;
+/* Category Badge - Top */
+.post-card-category {
+    padding: 1rem 1.25rem 0 1.25rem;
 }
 
 .category-badge {
@@ -47,107 +26,158 @@
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     border: 1px solid #e5e7eb;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #667eea;
     letter-spacing: 0.2px;
 }
 
-.likes-badge {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #dc2626;
-}
-
+/* Main Content Link */
 .post-link {
     text-decoration: none;
     color: inherit;
     display: block;
-    margin-bottom: 1.2rem;
-    transition: all 0.3s ease;
+    padding: 1rem 1.25rem;
+    transition: all 0.2s ease;
 }
 
 .post-link h2 {
-    margin: 0 0 0.7rem 0;
+    margin: 0 0 0.6rem 0;
     color: #1f2937;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    line-height: 1.3;
-    letter-spacing: -0.3px;
-}
-
-.post-link h2:hover {
-    color: #667eea;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
 }
 
 .snippet {
     margin: 0;
     color: #6b7280;
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
-.post-card-footer {
+/* Instagram-style Action Bar */
+.post-card-actions {
+    padding: 0.5rem 1.25rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.action-buttons {
     display: flex;
-    gap: 1.5rem;
-    font-size: 0.9rem;
-    color: #6b7280;
-    margin-bottom: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
+    gap: 1rem;
+    align-items: center;
 }
 
-.author {
+.action-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.4rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.action-btn:hover {
+    transform: scale(1.15);
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+.action-btn.liked {
+    animation: likeAnimation 0.5s ease;
+}
+
+.action-btn.saved {
+    animation: saveAnimation 0.3s ease;
+}
+
+@keyframes likeAnimation {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.3);
+    }
+
+    50% {
+        transform: scale(0.9);
+    }
+
+    75% {
+        transform: scale(1.2);
+    }
+}
+
+@keyframes saveAnimation {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.action-btn:disabled:hover {
+    transform: none;
+}
+
+/* Post Info Section */
+.post-card-info {
+    padding: 0 1.25rem 1rem 1.25rem;
+}
+
+.likes-count {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+.likes-count strong {
+    font-weight: 700;
+}
+
+.post-meta {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.author strong {
     font-weight: 600;
-    color: #667eea;
+    color: #1f2937;
+}
+
+.date-separator {
+    color: #d1d5db;
 }
 
 .date {
     color: #9ca3af;
 }
 
-.post-card-actions {
-    display: flex;
-    gap: 0.75rem;
-}
-
-.btn-small {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-}
-
-.btn-small.btn-edit {
-    background: linear-gradient(135deg, rgba(2, 132, 199, 0.1) 0%, rgba(2, 132, 199, 0.1) 100%);
-    color: #0284c7;
-    border: 1px solid #06b6d4;
-}
-
-.btn-small.btn-edit:hover {
-    background: #0284c7;
-    color: white;
-    transform: translateY(-1px);
-}
-
-.btn-small.btn-delete {
-    background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
-    color: #dc2626;
-    border: 1px solid #fca5a5;
-}
-
-.btn-small.btn-delete:hover {
-    background: #dc2626;
-    color: white;
-    transform: translateY(-1px);
-}
-
+/* Reveal Animation */
 .post-card.reveal {
     opacity: 0;
     transform: translateY(14px);
@@ -160,4 +190,24 @@
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .post-card-category,
+    .post-link,
+    .post-card-actions,
+    .post-card-info {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .post-link h2 {
+        font-size: 1.15rem;
+    }
+
+    .action-btn {
+        font-size: 1.4rem;
+    }
 }

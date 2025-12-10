@@ -71,6 +71,16 @@ function Catalog() {
     }
   }
 
+  // Handle post update (e.g., after liking)
+  const handlePostUpdated = (updatedPost) => {
+    setPosts((prev) =>
+      prev.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+    )
+    setFilteredPosts((prev) =>
+      prev.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+    )
+  }
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries, obs) => {
@@ -164,6 +174,7 @@ function Catalog() {
               className="reveal"
               innerRef={(el) => (cardRefs.current[index] = el)}
               style={{ '--reveal-delay': `${index * 80}ms` }}
+              onPostUpdated={handlePostUpdated}
             />
           ))}
         </div>
